@@ -34,7 +34,7 @@ in the main folder:
     
 ## Note
 
-You can set  different params for get better results 
+You can set  different parameters for get better results 
 
     mls.setComputeNormals(true);
     mls.setInputCloud(input_cloud);
