@@ -13,7 +13,7 @@ Upsampling method for upsampling an input cloud using mls method of PCL 1.9.1
 * umsampled_cloud.pcd 
 
 ## Example
-<img src="./example/scan1.png" align="center" height="400" width="720"><br>
+<img src="./example/example.png" align="center" height="400" width="720"><br>
 
 -------------------
 ## Compilation
