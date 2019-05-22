@@ -23,7 +23,7 @@ Upsampling method for upsampling an input cloud using mls method of PCL 1.9.1
 in the main folder:
 
     - cd build  
-    - cmake ../
+    - cmake ../src/
     - make
        
         	 
