@@ -10,7 +10,7 @@ Upsampling method for an input cloud using mls method of PCL 1.9.1
 
 ## Output file structure (.pcd)
 
-* umsampled_cloud.pcd 
+* unsampled_cloud.pcd 
 
 ## Example
 <img src="./example/example.png" align="center" height="400" width="720"><br>
