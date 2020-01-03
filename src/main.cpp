@@ -226,7 +226,8 @@ int main(int argc, char **argv){
     pcl::console::print_info("\nOutput cloud points: ");
     pcl::console::print_value("%d", output_cloud->points.size());
     pcl::console::print_info("\n");
-
+	
+    vtkObject::GlobalWarningDisplayOff(); // Disable vtk render warning   
     boost::shared_ptr<pcl::visualization::PCLVisualizer> viewer (new pcl::visualization::PCLVisualizer ("VISUALIZER"));
 
 	int PORT1 = 0;
