@@ -61,6 +61,7 @@ add_executable(${PROJECT_NAME} ${MAIN_SOURCE})
 # #############################################################################
 target_include_directories(${PROJECT_NAME} PRIVATE
     ${PCL_INCLUDE_DIRS}
+    include
 )
 
 # #############################################################################
