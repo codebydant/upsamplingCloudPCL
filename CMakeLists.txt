@@ -41,6 +41,11 @@ fetch_project(
     URL https://github.com/danielTobon43/cloudparse/archive/v0.2.1.tar.gz
 )
 
+fetch_project(
+    NAME argparse
+    URL https://github.com/p-ranav/argparse/archive/v2.6.tar.gz
+)
+
 # #############################################################################
 # SOURCE CODE
 # #############################################################################
@@ -64,6 +69,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 target_link_libraries(${PROJECT_NAME} PRIVATE
     ${PCL_LIBRARIES}
     cloudparse
+    argparse
 )
 
 # #############################################################################
