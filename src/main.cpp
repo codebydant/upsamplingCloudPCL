@@ -23,14 +23,32 @@
 #include <iostream>
 #include <string>
 
+#include "argparse/argparse.hpp"
 #include "cloudparse/parser.hpp"
 
-void printUsage(const char* progName) { std::cout << "\nUse: " << progName << " <file>" << std::endl << "support: .pcd .ply .txt .xyz" << std::endl << "[q] to exit" << std::endl; }
+// void printUsage(const char* progName) { std::cout << "\nUse: " << progName << " <file>" << std::endl << "support:
+// .pcd .ply .txt .xyz" << std::endl << "[q] to exit" << std::endl; }
 
 int main(int argc, char** argv) {
-  if (argc < 2 or argc > 2) {
-    printUsage(argv[0]);
-    return -1;
+  // -----------------Command line interface -----------------
+  argparse::ArgumentParser arg_parser(argv[0]);
+
+  arg_parser.add_argument("--cloudfile").required().help("input cloud file");
+  arg_parser.add_argument("--search-radius").default_value(double(0.03)).scan<'g', double>().help("epsilon value");
+  arg_parser.add_argument("--sampling-radius").default_value(double(0.005)).scan<'g', double>().help("epsilon value");
+  arg_parser.add_argument("--step-size").default_value(double(0.005)).scan<'g', double>().help("epsilon value");
+  arg_parser.add_argument("-o", "--output-dir").default_value(std::string("-")).help("output dir to save clusters");
+  arg_parser.add_argument("-d", "--display")
+      .default_value(false)
+      .implicit_value(true)
+      .help("display clusters in the pcl visualizer");
+
+  try {
+    arg_parser.parse_args(argc, argv);
+  } catch (const std::runtime_error& err) {
+    std::cerr << err.what() << std::endl;
+    std::cerr << arg_parser;
+    std::exit(0);
   }
 
   // -----------------Read input cloud file -----------------
@@ -38,23 +56,22 @@ int main(int argc, char** argv) {
 
   // cloud parser object
   CloudParserLibrary::ParserCloudFile cloud_parser;
-  cloud_parser.load_cloudfile(argv[1], input_cloud);
+  cloud_parser.load_cloudfile(arg_parser.get<std::string>("--cloudfile"), input_cloud);
 
   // set cloud metadata
   input_cloud->width = (int)input_cloud->points.size();
   input_cloud->height = 1;
   input_cloud->is_dense = true;
 
-  pcl::PointCloud<pcl::PointXYZRGB>::Ptr output_cloud(new pcl::PointCloud<pcl::PointXYZRGB>());
   pcl::PointCloud<pcl::PointXYZRGB>::Ptr dense_points(new pcl::PointCloud<pcl::PointXYZRGB>());
 
   pcl::search::KdTree<pcl::PointXYZRGB>::Ptr kd_tree(new pcl::search::KdTree<pcl::PointXYZRGB>);
-  pcl::PointCloud<pcl::PointNormal>::Ptr mls_points(new pcl::PointCloud<pcl::PointNormal>());
+  //   pcl::PointCloud<pcl::PointNormal>::Ptr mls_points(new pcl::PointCloud<pcl::PointNormal>());
   pcl::MovingLeastSquares<pcl::PointXYZRGB, pcl::PointXYZRGB> mls;
 
-  double search_radius = 0.03;     // 0.03
-  double sampling_radius = 0.005;  // 0.005
-  double step_size = 0.005;        // 0.005
+  double search_radius = arg_parser.get<double>("--search-radius");      // 0.03
+  double sampling_radius = arg_parser.get<double>("--sampling-radius");  // 0.005
+  double step_size = arg_parser.get<double>("--step-size");              // 0.005
   double gauss_param = (double)std::pow(search_radius, 2);
   int pol_order = 2;
   unsigned int num_threats = 1;
@@ -63,7 +80,8 @@ int main(int argc, char** argv) {
   mls.setInputCloud(input_cloud);
   mls.setSearchMethod(kd_tree);
   mls.setSearchRadius(search_radius);
-  mls.setUpsamplingMethod(pcl::MovingLeastSquares<pcl::PointXYZRGB, pcl::PointXYZRGB>::UpsamplingMethod::SAMPLE_LOCAL_PLANE);
+  mls.setUpsamplingMethod(
+      pcl::MovingLeastSquares<pcl::PointXYZRGB, pcl::PointXYZRGB>::UpsamplingMethod::SAMPLE_LOCAL_PLANE);
   mls.setUpsamplingRadius(sampling_radius);
   mls.setUpsamplingStepSize(step_size);
   mls.setPolynomialOrder(pol_order);
@@ -73,6 +91,8 @@ int main(int argc, char** argv) {
   // mls.setDilationVoxelSize();//Used only in the VOXEL_GRID_DILATION upsampling method
   // mls.setPointDensity(15); //15
   mls.process(*dense_points);
+
+  pcl::PointCloud<pcl::PointXYZRGB>::Ptr output_cloud(new pcl::PointCloud<pcl::PointXYZRGB>());
 
   *output_cloud = *input_cloud;
   *output_cloud += *dense_points;
