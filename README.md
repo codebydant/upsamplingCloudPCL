@@ -36,11 +36,11 @@ Optional arguments:
 -h --help         	shows help message and exits [default: false]
 -v --version      	prints version information and exits [default: false]
 --cloudfile       	input cloud file [required]
---search-radius   	epsilon value [default: 0.03]
---sampling-radius 	epsilon value [default: 0.005]
---step-size       	epsilon value [default: 0.005]
+--search-radius   	search radius value [default: 0.03]
+--sampling-radius 	sampling radius value [default: 0.005]
+--step-size       	step size [default: 0.005]
 -o --output-dir   	output dir to save clusters [default: "-"]
--d --display      	display clusters in the pcl visualizer [default: false]
+-d --display      	display upsampling in the pcl visualizer [default: false]
 ```
 
 ## Dependencies
