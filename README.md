@@ -39,7 +39,7 @@ Optional arguments:
 --search-radius   	search radius value [default: 0.03]
 --sampling-radius 	sampling radius value [default: 0.005]
 --step-size       	step size [default: 0.005]
--o --output-dir   	output dir to save clusters [default: "-"]
+-o --output-dir   	output dir to save upsampled cloud [default: "-"] (not configured)
 -d --display      	display upsampling in the pcl visualizer [default: false]
 ```
 
